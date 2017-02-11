@@ -44,7 +44,6 @@ hexchar (unsigned int b)
 char *
 cram (const char *challenge, const char *user, const char *pass)
 {
-    HMAC_CTX hmac;
     char hash[16];
     char hex[33];
     int i;
@@ -59,10 +58,9 @@ cram (const char *challenge, const char *user, const char *pass)
      */
     len = EVP_DecodeBlock ((unsigned char *) response, (unsigned char *) challenge, strlen (challenge));
 
-    HMAC_Init (&hmac, (unsigned char *) pass, strlen (pass), EVP_md5 ());
-    HMAC_Update (&hmac, (unsigned char *) response, strlen(response));
-    HMAC_Final (&hmac, (unsigned char *) hash, &hashlen);
-
+    HMAC(EVP_md5(), pass, strlen(pass),
+	 (unsigned char*)response, strlen(response),
+	 (unsigned char*)hash, &hashlen);
     assert (hashlen == sizeof (hash));
 
     free (response);

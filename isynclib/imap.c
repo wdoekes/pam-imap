@@ -72,7 +72,7 @@ free_message (message_t * msg)
 
 SSL_CTX *SSLContext = 0;
 
-#ifdef VERYIFY_CERT
+#ifdef VERIFY_CERT
 /* this gets called when a certificate is to be verified */
 static int
 verify_cert (SSL * ssl)
@@ -129,7 +129,7 @@ verify_cert (SSL * ssl)
 static int
 init_ssl (config_t * conf)
 {
-    SSL_METHOD *method;
+    const SSL_METHOD *method;
     int options = 0;
 
     if (!conf->cert_file)
@@ -674,7 +674,7 @@ imap_connect (config_t * cfg)
 	}
 	close (a[0]);
 	close (a[1]);
-	execl ("/bin/sh", "sh", "-c", cfg->tunnel, 0);
+	execl ("/bin/sh", "sh", "-c", cfg->tunnel, NULL);
 	_exit (127);
       }
 

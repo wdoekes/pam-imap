@@ -9,12 +9,6 @@ AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 
 AC_PROG_CC_STDC
-if test "$GCC" = yes; then
-	CFLAGS="$CFLAGS -pipe -Wall -Dlinux -DLINUX_PAM"
-	#CFLAGS="-pipe -Wall -Dlinux -DLINUX_PAM"
-	AC_CHECK_FILE(./isynclib, [CPPFLAGS="$CPPFLAGS -I./isynclib"])
-	LDFLAGS="$LDFLAGS -L/lib -Xlinker -x -shared"
-fi
 
 AC_CHECK_FUNCS(getopt_long)
 
@@ -31,7 +25,7 @@ AC_CHECK_LIB(nsl, inet_ntoa)
 AC_CHECK_LIB(pam, pam_sm_authenticate, [LIBS="$LIBS -lpam"])
 # FIXME: Replace `main' with a function in `-lpam_misc':
 AC_CHECK_LIB([pam_misc], [main], [LIBS="$LIBS -lpam_misc"])
-AC_CHECK_LIB(ssl, SSL_library_init, [LIBS="$LIBS -lssl"
+AC_CHECK_LIB(ssl, SSL_CTX_new, [LIBS="$LIBS -lssl"
 		AC_DEFINE(HAVE_LIBSSL, 1, [Define for OpenSSL]) ])
 # FIXME: Replace `main' with a function in `-lz':
 AC_CHECK_LIB([z], [main])
@@ -96,4 +90,15 @@ AC_CHECK_FUNCS([dup2 crypt gethostbyname getpass gettimeofday inet_ntoa memmove 
 
 AC_CONFIG_FILES([Makefile
                  isynclib/Makefile])
+
+# Make sure we don't define '-shared' in the LDFLAGS before the end, otherwise
+# it breaks ./configure tests. (This was moved from near the start.)
+# Add -fPIC so shared object will build.
+if test "$GCC" = yes; then
+	CFLAGS="$CFLAGS -fPIC -pipe -Wall -Dlinux -DLINUX_PAM"
+	#CFLAGS="-pipe -Wall -Dlinux -DLINUX_PAM"
+	AC_CHECK_FILE(./isynclib, [CPPFLAGS="$CPPFLAGS -I./isynclib"])
+	LDFLAGS="$LDFLAGS -L/lib -Xlinker -x -shared"
+fi
+
 AC_OUTPUT

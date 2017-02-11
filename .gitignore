@@ -9,4 +9,6 @@ Makefile
 /config.log
 /config.status
 /install-sh
+
+/check_user
 /pam_imap.so

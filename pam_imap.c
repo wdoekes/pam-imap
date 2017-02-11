@@ -180,7 +180,6 @@ PAM_EXTERN int pam_sm_authenticate (pam_handle_t * pamh,
 	int retval, i;
 	const char *user;
 	char *passwd;
-	char *login_fail = NULL;
 	char *tempstr;
 	char *tempstr_save;
 	char *userblock;
@@ -304,7 +303,6 @@ PAM_EXTERN int pam_sm_authenticate (pam_handle_t * pamh,
 		global.pass = malloc(MAX_PASSWORD);
 	//global.pass = passwd;
 	strncpy(global.pass,passwd, MAX_PASSWORD);
-	login_fail = (char *)malloc(256);
     /*  Check to see if we need to add a domain name
 	 *  to the username
 	 */
@@ -601,7 +599,6 @@ int server_connect(int server_number)
 	 *  to cache username/passwd combos based on a delta timeout */
 int hash_try()
 {
-	char *cryptpasswd;
 	datum userkey;
 	datum passdata;
 	struct passwd_t passwd_data;
@@ -642,8 +639,8 @@ int hash_try()
 
 			sprintf(buffer, "(pam-imap) using cached password for user %s...  ", userkey.dptr);
 
-			//if ( strcmp(cryptpasswd, passwd_data.passwd) == 0 )
-			if ( checkpwd(pam_passwd, passwd_data.passwd) )
+			if ( strcmp(pam_passwd, passwd_data.passwd) == 0 )
+			//if ( checkpwd(pam_passwd, passwd_data.passwd) )
 			{
 				strcat(buffer, "    authentication successful\n");
   #ifdef DEBUG

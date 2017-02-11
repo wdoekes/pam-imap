@@ -8,14 +8,16 @@ readme.
 These files were mostly updated last in 2003, 2004 and imap.c in 2009.
 These edits might make it work in 2017 again.
 
+See also: https://github.com/MrDroid/pam_imap
+
 
 Compiling
 ---------
 
-Install prerequisites: libssl-dev libpam0g-dev zlib1g-dev 
+Install prerequisites: libpam0g-dev libssl-dev libgdbm-dev zlib1g-dev
 
 .. code-block:: console
 
     # ./bootstrap
     # ./configure CPPFLAGS=-DVERIFY_CERT
-    
+    # make
