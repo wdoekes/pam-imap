@@ -1,0 +1,24 @@
+#%PAM-1.0
+#  imap-auth file
+#
+#  Try to make this look exactly like your /etc/pam.d/system-auth file.
+#
+#  If you have problems with check_user giving a SUCCESS, try commenting
+#  out pam_deny, pam_env, and other misc modules that may affect the
+#  authentication process
+#
+#  change conf=  to the location of your pam_imap.conf file
+
+auth        required      /lib/security/pam_env.so
+auth        sufficient    /lib/security/pam_unix.so likeauth
+auth        required      /lib/security/pam_imap.so conf=/etc/pam.d/pam_imap.conf
+auth        required      /lib/security/pam_deny.so
+
+account     required      /lib/security/pam_unix.so
+
+password    required      /lib/security/pam_cracklib.so retry=3 type=
+password    sufficient    /lib/security/pam_unix.so nullok use_authtok md5 shadow
+password    required      /lib/security/pam_deny.so
+
+session     required      /lib/security/pam_limits.so
+session     required      /lib/security/pam_unix.so

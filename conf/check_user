@@ -1,0 +1,18 @@
+# /etc/pam.d/check_user
+#  NOTE:   The current setup will only have the check_user application
+#  	Check against pam_imap.so.  If you'd like to do a test run
+#	with the rest of your authentication services, then uncomment
+#	them in this file.  This will give a separate testing environment
+# 	with pam_unix.so, or perhaps pam_krb5.so, and all your 
+#	favorite friends in combination with pam_imap.  Use
+#	this for testing before adding to a vital service like sshd
+#	or login...   you wouldn't want to accidently lock yourself
+#	out would you?   ;-)
+#
+#  Make the file /etc/pam.d/imap-auth look similar to your 'system-auth'
+#  file, but change the auth section to use pam_imap.so.
+#  Any services that direct to 'service=imap-auth' will have the same
+#  functionality.
+
+auth     required	pam_stack.so service=imap-auth
+account	required	pam_stack.so service=imap-auth

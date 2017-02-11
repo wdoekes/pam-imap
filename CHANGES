@@ -1,0 +1,76 @@
+
+This is just a simple log of the changes made to this code. 
+Changes made by Cal Heldenbrand unless otherwise noted.
+
+As of 0.3.8
+
+-- Created RPM spec file - Richard C. Greenwood
+   - Added and cleaned up sample configs
+
+-- Very minor code cleanup - Richard C. Greenwood
+   - Fixed some typos (DEUBG -> DEBUG)
+   - Allowed install path to be overridden in Makefile
+
+-- Modified check_user app to be a little more intelligent
+	- Checks Account info -- even though its not needed
+		for pam_imap, it's useful as a debugging tool
+
+As of 0.3.7 
+
+-- Fixed 16 char username limit
+  - usernames are defaulted at 64 chars, and can
+    be changed easily w/ MAX_USERNAME, also MAX_PASSWORD too
+  - Thanks to Tiziano Tresanti for spotting this one!
+
+-- Fixed the "sleep()" problem. 
+  - authentications will now be 3 seconds faster  ;-)
+  - Uber thanks to Neale Pickett for this!
+ 
+-- Added support for PAM_Domain, adding a username@domain.com
+    style login for Micro$oft IMAP servers
+  - Thanks to Ankit Rajvansh...  pam_imap is a little more 
+    complient with everyone's needs :)
+
+As of 0.3.6
+    -- Added hash table password caching.  Very usefull.  :)
+    -- fixed a few minor bugs
+    -- changed DES encryption to use MD5 encryption
+
+As of 0.3.5
+	-- Added "PAM_BlockList" directive =>  Allows a list of users
+		that will not be checked against the IMAP server
+		(IE:  root, Administrator, apache, whatever)
+	-- Fixed the problem if libdb was not found, or
+		libndbm, isync.h would give a parse error for DBM
+		=>  took out requirement for DBM, so this will not happen anymore
+
+As of 0.3.4
+	-- Fixed malloc bug when pam_imap reaches the "end" of
+	the available server list and segfaults.
+	-- Disallowed NULL passwords to be sent to the IMAP server
+
+As of 0.3.3 -- Fixed the password exchanging for stacking modules
+	IE:  Now, you may use pam_unix.so as a first check, then
+	use pam_imap.so as a secondary (but required) check
+
+
+----   Older Crap ------
+
+Added in autoconf scripts -- This is not *fully* implemented, but
+	it does do some basic checks and allows the user to set
+	DEBUG mode easily
+
+Added functionality for server rollover
+
+Created a configuration file interface, based off of what isync used,
+and also added my own parser for extra functionality in the .conf file.
+(parseconf.c)
+
+Changed the entire IMAP client interface.  Was using the University
+of Washington IMAP library.  I didn't like this library -- found
+a package called isync which had a VERY nice implementation.
+        http://isync.sf.net
+        Author: Michael Elkins <me@mutt.org>
+        Current maintainer: Oswald Buddenhagen <ossi@users.sf.net>
+
+

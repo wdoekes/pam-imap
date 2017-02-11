@@ -1,0 +1,76 @@
+INSTALL_DIR = $(DESTDIR)/lib/security
+CC=@CC@
+CFLAGS=@CFLAGS@ @CPPFLAGS@ -I. -I /usr/kerberos/include -I /usr/local/include -I isynclib
+#CFLAGS=@CFLAGS@ @CPPFLAGS@
+#CPPFLAGS=@CPPFLAGS@
+DEFINE=@DEFS@
+LDFLAGS=@LDFLAGS@ -shared
+LIBS=@LIBS@
+ISYNCLIB=./isynclib
+
+#export CFLAGS=-Wall -O2 -g -Wno-deprecated -Wshadow -Wmissing-prototypes \
+#	-I$(ISYNCLIB) -Dlinux -DLINUX_PAM -D_POSIX_SOURCE \
+#	-Wpointer-arith -Wcast-qual -Wcast-align -Wtraditional \
+#	-Winline -fPIC
+#export LD_D=-lssl -lcrypto -lnsl -ldb -L/lib -Xlinker -shared -x -lz \
+	-lpam -lpam_misc
+#LFLAGS = -shared -lssl -lcrypto -lnsl -ldb -L/lib -Xlinker -x -lz -lpam -lpam_misc
+#### User config note:  Take out -DDEBUG if you would not like
+# extra debugging info printed to the screen / log files
+# Also... if you would like to have SSL keys to be verified
+#  add in  -DVERIFY_CERT   -- I personally find it annoying
+#DEFINE=-DDEBUG -DHAVE_CONFIG_H -DHAVE_LIBSSL
+#export DEFINE=-DDEBUG -DHAVE_CONFIG_H -DHAVE_LIBSSL
+
+PROG=pam_imap.so
+#OBJ=imaptest.o imap.o sync.o config.o maildir.o list.o cram.o dotlock.o
+OBJ=$(ISYNCLIB)/config.o $(ISYNCLIB)/imap.o \
+	$(ISYNCLIB)/list.o $(ISYNCLIB)/cram.o $(ISYNCLIB)/helpers.o \
+	pam_imap.o parseconf.o
+
+all: isync check_user $(PROG) 
+
+$(PROG): $(OBJ) 
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LIBS) $(DEFINE) -o $(PROG) $(OBJ) 
+
+pam_imap.o: pam_imap.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(DEFINE) -c pam_imap.c
+
+parseconf.o: parseconf.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(DEFINE) -c parseconf.c
+ 
+#imaptest.o: imaptest.c
+#	$(CC) $(CFLAGS) $(DEFINE) -c imaptest.c
+#
+#helpers.o: helpers.c
+#	$(CC) $(CFLAGS) $(DEFINE) -c helpers.c
+#
+#maildir.o: maildir.c
+#	$(CC) $(CFLAGS) $(DEFINE) -c maildir.c
+#
+#list.o: list.c
+#	$(CC) $(CFLAGS) $(DEFINE) -c list.c
+#
+#cram.o: cram.c
+#	$(CC) $(CFLAGS) $(DEFINE) -c cram.c
+#
+#dotlock.o: dotlock.c
+#	$(CC) $(CFLAGS) $(DEFINE) -c dotlock.c
+
+#config.o: config.c
+#	$(CC) $(CFLAGS) $(DEFINE) -c config.c
+
+isync:
+	cd $(ISYNCLIB) ; make
+ 
+check_user: check_user.c
+	$(CC) $(CFLAGS) -lpam -lpam_misc check_user.c -o check_user
+install:
+	make all
+	install -m 755 $(PROG) $(INSTALL_DIR)
+ 
+clean:
+	rm -f *.o $(OBJ) 
+distclean:
+	rm -f *.o $(OBJ) $(PROG) check_user \; 
+	rm -f Makefile config.h $(ISYNCLIB)/Makefile config.log

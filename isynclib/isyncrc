@@ -1,0 +1,54 @@
+# Global configuration section
+#   Values here are used as defaults for any following Mailbox section that
+#   doesn't specify it.
+
+#CertificateFile /usr/share/ssl/certs/ca-bundle.crt
+CertificateFile /usr/share/ssl/certs/imapd.pem
+
+# by default, expunge deleted messages (same as -e on command line)
+#Expunge yes
+
+# by default delete messages in the local mailbox which no longer exist
+# on the server
+#Delete yes
+
+# copy deleted messages to the IMAP "Trash" folder
+#CopyDeletedTo "Trash"
+
+# my default username, if different from the local username
+#User cal 
+#Port	143
+#Box	INBOX
+# don't download messages larger than 200K bytes
+#MaxSize	200000
+
+###
+### work mailbox
+###
+
+#Mailbox /home/me/Mail/work
+#Host	work.host.com
+#Pass	xxxxxxxx
+# define a shortcut so I can just use "isync work" from the command line
+#Alias	work
+# don't auto expunge messages in this box (overridden by -e on command line)
+#Expunge no
+
+###
+### personal mailbox
+###
+
+#Mailbox /home/me/Mail/personal
+#Host host.play.com
+# use a non-default port for this connection
+#Port 6789
+#Alias personal
+
+
+###
+### Remote mailbox over a SSH tunnel
+###
+
+#Mailbox /home/me/Mail/remote
+#Host localhost
+#Tunnel "ssh -l cal -q localhost /usr/sbin/imapd"

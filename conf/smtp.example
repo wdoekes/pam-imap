@@ -1,0 +1,5 @@
+#%PAM-1.0
+auth       sufficient	pam_imap.so conf=/etc/pam.d/pam_imap.conf
+auth       required	pam_stack.so service=system-auth
+account    sufficient	pam_imap.so conf=/etc/pam.d/pam_imap.conf
+account    required	pam_stack.so service=system-auth

@@ -1,0 +1,296 @@
+###############################################################################
+				PAM_IMAP
+###############################################################################
+
+Questions?  Comments?  Bugs?
+	Please go to http://pam-imap.sf.net and sign up on the mailing list!
+	I will post new info about bugfixes and updates to the list,
+	and, this is the best way to ask for help.
+
+	If you find a bug in the code that results in a segfault or other
+	runtime errors, read the "Bug submit" section at the bottom
+	of this file.
+
+	Otherwise, you may directly email me at:
+
+	Email  Cal Heldenbrand,
+		<heldenca@mnstate.edu> or <calzplace@users.sf.net>
+
+
+
+	Required Libraries:
+		(from glibc-devel)
+			libcrypto
+			socket
+			libpam
+			lib-pam_misc
+		libdb   (RH package db4-devel)  
+			(sleepycat.com, or your favorite RPM/package site)
+		OpenSSH  (www.openssh.org)
+
+	Configuration Setup:
+
+	SystemV linux distros:  RedHat, Debian, etc
+	******************************************************
+
+################################################
+#######          Compile      ##################
+################################################
+
+	-unpack the tarball
+	-cd to the source dir
+	-run configure
+		mybox$ ./configure
+	Optionally, you may specifiy --with-debug=yes
+		mybox$ ./configure --with-debug=yes
+	This turns on extra debugging output and compiles the 
+	PAM module with symbol information.  If you have problems
+	with the module and would like to submit a bug, please
+	recompile with this option enabled
+	-run make
+		mybox$ make
+
+	NOTE:  If you recieve an error message like:
+
+	-------------
+In file included from config.c:25:
+isync.h:35:19: ndbm.h: No such file or directory
+In file included from config.c:25:
+isync.h:99: parse error before "DBM"
+isync.h:99: warning: no semicolon at end of struct or union
+isync.h:106: parse error before ':' token
+	------------
+
+	This means you do not have the required libraries to
+	install!  Currently, the configure script silently
+	accepts errors that packages are not installed.
+	Rerun ./configure and watch for
+
+	-lcrypto, -ldb, -lpam, -lpam_misc and -lssl
+	If any of these say "no", install the appropriate package
+	listed at the top of this file.
+
+	(Yes, my configure script is very primitive and needs work.)
+
+	###  NOTE As of 0.3.5  -- removed requirements for DBM ###
+
+	- Finally, do a "make install" as root
+		mybox$ sudo make install
+
+	The first step of the process is done!
+
+################################################
+#######      Configuration    ##################
+################################################
+
+####### NOTE   #####
+  #  Configuration has changed slightly from version 0.3.3!!!
+  #  The previous way of configuring will still work,
+  #  but the method described here is much easier.
+####################
+
+1) pam_imap.conf
+	-copy the pam_imap.conf file under ./conf to /etc/pam.d/
+		mybox$ cp ./conf/pam_imap.conf /etc/pam.d
+
+		This should be well documented
+		-make sure to change PAM_ServerX variables
+		-make sure to check that "imap.pem" exists!
+			-If it does not, generate a cert key or find any
+			.pem file... make sure it is readable by all users.
+	-As of version 0.3.6 -- READ BELOW for information on the
+	password cacheing feature!
+
+2) imap-auth
+	-copy the imap-auth file to /etc/pam.d
+		mybox$ cp ./conf/imap-auth /etc/pam.d
+		NOTE:  If you changed the location of pam_imap.conf, you need
+		to change the "conf=" line in imap-auth!
+
+	NOTE:  imap-auth should look exactly like system-auth except for
+	ONE LINE added (which is the pam_imap.so line)
+		If you have problems with logins, compare YOUR system-auth
+		with the imap-auth file I provided...
+		if lines other than "pam_imap.so" are different,
+		change the imap-auth file to match yours.
+
+3) check_user  (optional)
+
+	-copy ./conf/check_user to /etc/pam.d
+		mybox$ cp ./conf_check_user /etc/pam.d
+
+	This file enabled the "check_user" testing app to function with
+	pam_imap.  If you have problems with pam_imap, and would like
+	to see more output with DEBUG enabled, use this application.
+
+4) Choose services you'd like pam_imap to be implemented in
+
+	-Edit the appropriate file under /etc/pam.d/ for a particular service
+	(IE:  login, sshd, sudo, etc under /etc/pam.d )
+
+	-Change any "auth" section service=system-auth lines to
+			"service=imap-auth"
+	This changes pam_stack.so to use the imap-auth file instead of
+	the system-auth
+
+	For example, if you wanted to change the system login authentication
+	to use pam_imap, the /etc/pam.d/login file should look like this:
+-------------------------------------------------------------------------------
+#%PAM-1.0
+auth       required     /lib/security/pam_securetty.so
+auth       required     /lib/security/pam_stack.so service=imap-auth
+auth       required     /lib/security/pam_nologin.so
+account    required     /lib/security/pam_stack.so service=system-auth
+password   required     /lib/security/pam_stack.so service=system-auth
+session    required     /lib/security/pam_stack.so service=system-auth
+session    optional     /lib/security/pam_console.so
+-------------------------------------------------------------------------------
+	Note that the pam_imap module is *only* used for the "auth" section.
+	All of the other services are not possible with the IMAP protocol
+
+	Note2:  DO NOT edit your /etc/pam.d/system-auth file and replace
+	pam_unix.so with pam_imap.so.  Keep the system-auth and imap-auth
+	files separate so you have the ability to control which services
+	will remain completely local to the machine.
+
+
+	BSD distros:  FreeBSD, NetBSD, etc
+	******************************************************
+	This should be very similar to above, except a different
+	format for configuration...  here's a quick rundown
+
+	-edit /etc/pam.conf and just change the desired
+		authentication service (IE: login, su, ssh, etc) to point
+		to /lib/security/pam_imap.so instead of pam_stack.so or
+		pam_unix.so (depending on how your pam system is setup)
+		After the pam_imap.so, enter in your conf= line too
+		(read above)
+	-NOTE:  Untested as of Nov03
+		-To work with BSD systems, you'll need GNU make
+
+##############################
+check_user installation:
+##############################
+	This app is a very simple testing program, and can be run
+	independantly from any other service.
+
+	Look at ./conf/check_user, and copy it to /etc/pam.d
+
+	Then, run check_user [username] to test the pam_imap module
+
+
+	So far this module has been tested with GCC 2.96 on a RH 7 box,
+	and GCC 3.x on a RH 8 box.
+
+#####################################
+Notes on hash table password caching
+#####################################
+
+This feature has just been added in 0.3.6.  Since the IMAP protocol
+is slow during the authentication phase, applications that require
+many authentications for every action have an *extreme* slowdown.
+Think of Apache with WebDAV -- every action could have around
+20 authentications just to view a directory.  Take that X ~5 sec
+for each auth, this becomes a problem.
+
+I've added password caching, and as of 0.3.6 it is not the best
+or most secure thing out there, but it works in a pinch.
+
+To enable password caching, change PAM_HashEnable = yes
+
+Another variable, is the PAM_HashDelta, which is the time in seconds
+that the password is considered "fresh."  After X seconds, pam_imap
+will query the IMAP server for the authentication, and will update
+the hash table with a fresh password entry.
+
+  ## PERMISSIONS with PAM_HashFile ##
+  
+  The location of the hash file and the permissions need to be taken
+  in account for depending on the application you use pam_imap.
+
+  The hash file must be read/write for any user ID that a PAM aware
+  application runs with.  It is best if all of your applications
+  run as either root, or a special user, like apache.
+
+  If regular users directly execute the pam application, there is
+  a possible security vulnerability, because users would be able
+  to read and write to the file.  The passwords are encrypted
+  with MD5 in GLIBC, so they are fairly secure, but trusting
+  security soley on an encryption algorithm is not a sound
+  security measure.
+
+  Keep this in mind when using on production systems.
+
+  If pam_imap is used with multiple applications, permissions
+  can be set to only allow, say, user apache read/write on the
+  file.  If users cannot read or write the file, it will simply
+  cause a cache miss, and go to the IMAP server anyway, so
+  it's not too large of a problem.
+
+  Another FYI -- if a file must be set mode 666 (or, some
+  form of world-writable) it is a good idea to set
+  the "sticky bit" on, (mode 1xxx... e.g.  mode 1666)
+  This will allow users to write to the file, but not
+  delete the entire file.
+
+###########################################
+#######  Submitting Bugs  #################
+###########################################
+
+If you found a bug in pam_imap, please let me know!  The more testing that
+gets done, the more it helps me out.
+
+If you run the check_user app and it gives a segmentation fault or other
+runtime errors, OR if you think there is a logic error in the code
+and it doesn't function the way you think it should, follow these
+steps.
+
+Use the --with-debug=yes option on configure
+
+	mybox$ ./configure --with-debug=yes
+
+'make' and 'make install' as normal
+
+re-run check_user with the GNU debugger
+
+	mybox$ gdb ./check_user
+--
+GNU gdb Red Hat Linux (5.3.90-0.20030710.41rh)
+Copyright 2003 Free Software Foundation, Inc.
+GDB is free software, covered by the GNU General Public License, and you are
+welcome to change it and/or distribute copies of it under certain conditions.
+Type "show copying" to see the conditions.
+There is absolutely no warranty for GDB.  Type "show warranty" for details.
+This GDB was configured as "i386-redhat-linux-gnu".
+(gdb) _
+--
+
+At the (gdb) prompt type:
+
+	(gdb) set args <username>
+
+	where <username> is the argument for check_user (the username you
+	want to try to auth against the IMAP server)
+
+	then:
+	(gdb) run
+
+	will start the execution of the code.  Interact as you would
+	normally to re-create the bug.  When it seg faults, it will
+	return back to the (gdb) prompt.  Type:
+
+	(gdb) bt
+
+	to get a backtrace on the code.  Copy and paste all of this
+	to an email to  pam-imap-help@lists.sf.net
+
+	You will probably want to sign up to the mailing list also.
+	Go to http://pam-imap.sf.net  and follow the links from there.
+
+Also with this backtrace, give me a description of your OS and any other
+info about your environment.  Give a brief description on what you did
+to cause the bug, and this should give me a good amount of info to
+fix the bug you found!   THANK YOU in advance!
+
+
+

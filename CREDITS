@@ -1,0 +1,18 @@
+
+        Used the isync program as a client library in the module.  Check out
+        http://isync.sourceforge.net  if you'd like to use this software
+                Written by Michael R. Elkins <me@mutt.org>,
+                maintained by Oswald Buddenhagen <ossi@users.sf.net>.
+
+
+	Thanks to Robert Clark at the sourceforge pam_imap project
+        Modified by Robert Clark <bobby.clark@eku.edu> & Dustin Tennill
+        <dustin.tennill@eku.edu> (1-19-2001)
+        Original Version written by: Gunay ARSLAN
+        <arslan@gunes.medyatext.com.tr>
+        Modified by: James O'Kane <jo2y@midnightlinux.com>
+	Modifications by Steve Brown, <steve@electronic.co.uk>
+
+													        And last but not least, ME
+														        Cal Heldenbrand --   <heldenca@mnstate.edu>  or <calzplace@yahoo.com>
+	-Responsible for the current status of the module as of ~Oct 2003															

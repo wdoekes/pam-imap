@@ -1,0 +1,54 @@
+BUGS BUGS BUGS...
+
+--  0.3.6:  hashing table uses DES encryption for now... not too secure
+	-- FIXED  using MD5 encryption now
+
+-- 0.3.5:  this version kind of got lost in the development process  :)
+	Skipped to 0.3.6
+
+-- The server connect failover has not been thoroghly tested
+	--  BUG FIXED
+	When the server rollover hits the very last server, 
+	I was having problems with some string checking for NULL,
+	causing pam_imap.so to segfault when there were no servers
+	left to check...  FIXED as of 0.3.4
+
+-- Disallowed NULL passwords as of 0.3.4 --
+	Explanation:  If you type in a username, before PAM asks
+	you for your password (IE:  sm_authenticate() called )
+	it sends a NULL (as in '\0') password to each authentication
+	module.  This is why you see lines in your /var/log/messages
+	that have something similar to
+	"sshd(pam_unix)[22126]: authentication failure; logname= uid=0 euid=0 tty=NODEVssh ruser= rhost="
+	This is because PAM is being a butthole for some reason.  This
+	fix is a workaround for not hitting the IMAP server with
+	a failed login EVERYTIME you want to log in.... it also
+	makes the login process painfully slow.
+
+	FIXED.
+
+-- Security possiblity:  If hostnames are used in pam_imap.conf
+	there may be opportunities for DNS hacking to spoof
+	a malicious IMAP server that accepts a username/password
+	Quick & Dirty solution:  Use IP addresses instead of 
+	hostnames in pam_imap.conf
+	Elegant solution:  Code pam_imap to only allow IP adresses
+
+	-- Bug related to this: If a hostname is "unknown" to the
+	client, then the module will segfault.  (somewhere in strcpy() )
+		--FIXED
+
+-- And, of course, if you use IMAP w/o SSL, that's just a whole
+	can of worms there.
+
+More???  If you find any, please email Cal Heldenbrand
+	<calzplace@users.sf.net>
+
+
+How about this?  Anyone that finds bugs in the code will WIN...
+
+...  a pat on the back.  ;-)  If you send a patch, you will WIN...
+
+...  another pat on the back, and, a Snackey Smore.
+
+Please read the BUG SUBMISSION section in the README file

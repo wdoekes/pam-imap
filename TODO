@@ -1,0 +1,14 @@
+
+-- Work on implementing more autoconf and automake features
+
+-- Work on a better implementation of parsing pam_imap.conf
+	Possibly with a Server { } (block style) configuration
+Example:
+
+	Server0
+	{
+		imaps
+		port 993
+		host my.mailserver.net
+		... more options...
+	}
