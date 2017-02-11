@@ -1,0 +1,12 @@
+Makefile
+*~
+*.o
+*.swp
+
+/autom4te.cache/
+/configure
+/config.h
+/config.log
+/config.status
+/install-sh
+/pam_imap.so
