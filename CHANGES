@@ -2,6 +2,11 @@
 This is just a simple log of the changes made to this code. 
 Changes made by Cal Heldenbrand unless otherwise noted.
 
+As of 0.3.9
+
+-- Fixes by Walter Doekes to make it compile on Debian Stretch
+-- Cleanups for debian packaging
+
 As of 0.3.8
 
 -- Created RPM spec file - Richard C. Greenwood

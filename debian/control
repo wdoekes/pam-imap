@@ -1,0 +1,22 @@
+Source: pam-imap
+Section: admin
+Priority: extra
+Maintainer: Walter Doekes <wjdoekes+pam-imap@osso.nl>
+Standards-Version: 3.9.8
+Build-Depends:
+ debhelper (>= 9),
+ dh-autoreconf,
+ libpam0g-dev,
+ libssl-dev,
+ libgdbm-dev,
+Homepage: https://github.com/wdoekes/pam_imap
+
+Package: libpam-imap
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+Description: PAM module interfacing with IMAP server
+ This module lets PAM-enabled applications get authentication and
+ account information from IMAP(S) servers.

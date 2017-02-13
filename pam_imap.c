@@ -555,10 +555,8 @@ int server_connect(int server_number)
 	}
 	else if ( imap->error == 1 )
 	{ /* connect failure */
-		buffer = malloc(256);
-		sprintf(buffer, "(pam_imap) SERVER connection failure: %s:%d => %s", global.host, global.port, imap->error_message);
-		syslog(LOG_ERR, buffer);
-		free(buffer);
+		syslog(LOG_ERR, "(pam_imap) SERVER connection failure: %s:%d => %s",
+			global.host, global.port, imap->error_message);
 #ifdef DEBUG
 		printf("connect failure: ");
 		printf("%s\n", imap->error_message);
@@ -567,10 +565,8 @@ int server_connect(int server_number)
 	}
 	else if ( imap->error == 2 )
 	{ /* login failure */
-		buffer = malloc(256);
-		sprintf(buffer, "(pam_imap) LOGIN FAILURE user %s on %s:%d => %s", global.user, global.host, global.port, imap->error_message);
-		syslog(LOG_ERR, buffer);
-		free(buffer);
+		syslog(LOG_ERR, "(pam_imap) LOGIN FAILURE user %s on %s:%d => %s",
+			global.user, global.host, global.port, imap->error_message);
 #ifdef DEBUG
 		printf("login failure");
 		printf("%s\n", imap->error_message);

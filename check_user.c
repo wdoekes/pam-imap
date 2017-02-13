@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     pamh = NULL;
 
 
-    if(argc == 1)
+    if(argc <= 1)
     {
         fprintf(stderr, "Usage: check_user <username> [service]\n");
 	fprintf(stderr, "where username is, well, username.\n");

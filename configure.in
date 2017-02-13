@@ -1,5 +1,5 @@
 # Process this file with autoconf to produce a configure script.
-AC_INIT(pam_imap, 0.3.8wjd0, calzplace@users.sf.net)
+AC_INIT(pam_imap, 0.3.9~rc1, calzplace@users.sf.net)
 AC_CONFIG_SRCDIR([check_user.c])
 AC_CONFIG_HEADER(config.h)
 #AM_INIT_AUTOMAKE
@@ -20,15 +20,9 @@ AC_CHECK_LIB(db, dbm_open, [AC_DEFINE(HAVE_LIBDB, 1, [Define if you have libdb])
 AC_CHECK_LIB(gdbm, gdbm_open, [LIBS="$LIBS -lgdbm"
 	AC_DEFINE(HAVE_LIBGDBM, 1, [Define if you have libgdbm]) ])
 AC_CHECK_LIB(socket, socket)
-AC_CHECK_LIB(nsl, inet_ntoa)
-# FIXME: Replace `main' with a function in `-lpam':
 AC_CHECK_LIB(pam, pam_sm_authenticate, [LIBS="$LIBS -lpam"])
-# FIXME: Replace `main' with a function in `-lpam_misc':
-AC_CHECK_LIB([pam_misc], [main], [LIBS="$LIBS -lpam_misc"])
 AC_CHECK_LIB(ssl, SSL_CTX_new, [LIBS="$LIBS -lssl"
 		AC_DEFINE(HAVE_LIBSSL, 1, [Define for OpenSSL]) ])
-# FIXME: Replace `main' with a function in `-lz':
-AC_CHECK_LIB([z], [main])
 
 #AC_CACHE_CHECK(for dbm_open, ac_cv_dbmopen,
 #        [ac_cv_dbmopen=no
@@ -95,10 +89,10 @@ AC_CONFIG_FILES([Makefile
 # it breaks ./configure tests. (This was moved from near the start.)
 # Add -fPIC so shared object will build.
 if test "$GCC" = yes; then
-	CFLAGS="$CFLAGS -fPIC -pipe -Wall -Dlinux -DLINUX_PAM"
+	CFLAGS="$CFLAGS -fPIC -pipe -Wall"
 	#CFLAGS="-pipe -Wall -Dlinux -DLINUX_PAM"
 	AC_CHECK_FILE(./isynclib, [CPPFLAGS="$CPPFLAGS -I./isynclib"])
-	LDFLAGS="$LDFLAGS -L/lib -Xlinker -x -shared"
+	#LDFLAGS="$LDFLAGS -L/lib -Xlinker -x -shared"
 fi
 
 AC_OUTPUT

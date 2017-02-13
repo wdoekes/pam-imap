@@ -1,0 +1,18 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all,-relro
+
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+
+SECDIR = /lib/$(DEB_HOST_MULTIARCH)/security
+
+%:
+	dh $@ --with autoreconf
+
+override_dh_auto_configure:
+	./bootstrap
+	dh_auto_configure -- CPPFLAGS=-DVERIFY_CERT
+
+override_dh_auto_install:
+	install -D -m640 conf/pam_imap.conf debian/libpam-imap/etc/pam.d/pam_imap.conf
+	install -D -m755 pam_imap.so debian/libpam-imap/$(SECDIR)/pam_imap.so

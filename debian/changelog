@@ -1,0 +1,5 @@
+pam-imap (0.3.9~rc1-1) unstable; urgency=medium
+
+  * Initial upload.
+
+ -- Walter Doekes <wjdoekes+pam-imap@osso.nl>  Tue, 14 Feb 2017 00:08:36 +0100

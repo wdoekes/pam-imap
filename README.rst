@@ -2,7 +2,7 @@ pam_imap for 2017+
 ==================
 
 This is an updated version of pam_imap 0.3.8, taken from
-http://pam-imap.sourceforge.net/. See README.orig for the original
+http://pam-imap.sourceforge.net/. See README.original for the original
 readme.
 
 These files were mostly updated last in 2003, 2004 and imap.c in 2009.
@@ -14,10 +14,19 @@ See also: https://github.com/MrDroid/pam_imap
 Compiling
 ---------
 
-Install prerequisites: libpam0g-dev libssl-dev libgdbm-dev zlib1g-dev
+Install prerequisites: libpam0g-dev libssl-dev libgdbm-dev
 
 .. code-block:: console
 
-    # ./bootstrap
-    # ./configure CPPFLAGS=-DVERIFY_CERT
-    # make
+    $ ./bootstrap
+    $ ./configure CPPFLAGS=-DVERIFY_CERT
+    $ make
+
+
+Building a debian package with ``gbp``:
+
+.. code-block:: console
+
+    $ git clean -xf
+    $ gbp buildpackage -us -uc -sa --git-debian-branch=master --git-upstream-tag='v%(version)s' --git-ignore-new
+
