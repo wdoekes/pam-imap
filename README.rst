@@ -1,4 +1,4 @@
-pam_imap for 2017+
+pam-imap for 2017+
 ==================
 
 This is an updated version of pam_imap 0.3.8, taken from
@@ -14,7 +14,7 @@ See also: https://github.com/MrDroid/pam_imap
 Compiling
 ---------
 
-Install prerequisites: libpam0g-dev libssl-dev libgdbm-dev
+Debian install prerequisites: libpam0g-dev libssl-dev libgdbm-dev
 
 .. code-block:: console
 
@@ -23,7 +23,7 @@ Install prerequisites: libpam0g-dev libssl-dev libgdbm-dev
     $ make
 
 
-Building a debian package with ``gbp``:
+Building a Debian package with ``gbp``:
 
 .. code-block:: console
 

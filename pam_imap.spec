@@ -1,16 +1,16 @@
 Summary:   PAM Module to authenticate against an IMAP server
-Name:      pam_imap
-Version:   0.3.8
+Name:      pam-imap
+Version:   0.3.9
 Release:   1
 URL:       https://sourceforge.net/projects/pam-imap/
-Source:    http://prdownloads.sourceforge.net/pam-imap/%{name}-%{version}.tar.bz2
+Source:    https://github.com/wdoekes/pam-imap/releases/download/v%{version}/%{name}_%{version}.tar.gz
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 License:   GPL
 Group:     Applications/System
 
 BuildRequires: pam-devel
 
-Obsoletes: pam-imap
+Obsoletes: pam_imap
 
 %description
 This is a PAM module that authenticates a user login against a remote 

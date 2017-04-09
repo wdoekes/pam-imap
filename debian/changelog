@@ -1,3 +1,9 @@
+pam-imap (0.3.9-1) unstable; urgency=medium
+
+  * Finalize 0.3.9. Rename from pam_imap to pam-imap in a few places.
+
+ -- Walter Doekes <wjdoekes+pam-imap@osso.nl>  Sun, 09 Apr 2017 15:31:43 +0200
+
 pam-imap (0.3.9~rc1-1) unstable; urgency=medium
 
   * Initial upload.
