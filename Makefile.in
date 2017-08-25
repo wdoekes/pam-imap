@@ -23,54 +23,30 @@ ISYNCLIB=./isynclib
 #export DEFINE=-DDEBUG -DHAVE_CONFIG_H -DHAVE_LIBSSL
 
 PROG=pam_imap.so
+UTILS=check_user
 #OBJ=imaptest.o imap.o sync.o config.o maildir.o list.o cram.o dotlock.o
 OBJ=$(ISYNCLIB)/config.o $(ISYNCLIB)/imap.o \
 	$(ISYNCLIB)/list.o $(ISYNCLIB)/cram.o $(ISYNCLIB)/helpers.o \
 	pam_imap.o parseconf.o
 
-all: isync check_user $(PROG) 
+all: isync $(UTILS) $(PROG)
 
-$(PROG): $(OBJ) 
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LIBS) $(DEFINE) -o $(PROG) $(OBJ) 
+$(PROG): $(OBJ)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(DEFINE) -o $@ $^ $(LIBS)
 
-pam_imap.o: pam_imap.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(DEFINE) -c pam_imap.c
-
-parseconf.o: parseconf.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(DEFINE) -c parseconf.c
- 
-#imaptest.o: imaptest.c
-#	$(CC) $(CFLAGS) $(DEFINE) -c imaptest.c
-#
-#helpers.o: helpers.c
-#	$(CC) $(CFLAGS) $(DEFINE) -c helpers.c
-#
-#maildir.o: maildir.c
-#	$(CC) $(CFLAGS) $(DEFINE) -c maildir.c
-#
-#list.o: list.c
-#	$(CC) $(CFLAGS) $(DEFINE) -c list.c
-#
-#cram.o: cram.c
-#	$(CC) $(CFLAGS) $(DEFINE) -c cram.c
-#
-#dotlock.o: dotlock.c
-#	$(CC) $(CFLAGS) $(DEFINE) -c dotlock.c
-
-#config.o: config.c
-#	$(CC) $(CFLAGS) $(DEFINE) -c config.c
+.c.o:
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(DEFINE) -c -o $@ $^
 
 isync:
-	cd $(ISYNCLIB) ; make
- 
+	$(MAKE) -C $(ISYNCLIB)
+
 check_user: check_user.c
-	$(CC) $(CFLAGS) -lpam -lpam_misc check_user.c -o check_user
+	$(CC) $(CFLAGS) check_user.c -o check_user -lpam -lpam_misc
 install:
 	make all
 	install -m 755 $(PROG) $(INSTALL_DIR)
- 
+
 clean:
-	rm -f *.o $(OBJ) 
-distclean:
-	rm -f *.o $(OBJ) $(PROG) check_user \; 
-	rm -f Makefile config.h $(ISYNCLIB)/Makefile config.log
+	$(RM) *.o $(OBJ) $(PROG) $(UTILS)
+distclean: clean
+	$(RM) Makefile $(ISYNCLIB)/Makefile config.h config.log

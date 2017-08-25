@@ -12,36 +12,16 @@ LIBS=@LIBS@
 #OBJ=imaptest.o imap.o sync.o config.o maildir.o list.o cram.o dotlock.o
 OBJ=config.o imap.o list.o cram.o helpers.o
 
-all: $(OBJ) 
+all: $(OBJ)
 
-$(PROG): $(OBJ) 
-	$(CC) $(CFLAGS) $(LFLAGS) $(LIBS) $(DEFINE) -o $(PROG) $(OBJ) 
+$(PROG): $(OBJ)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(LFLAGS) $(LIBS) $(DEFINE) -o $(PROG) $(OBJ)
 
-imap.o: imap.c
-	$(CC) $(CFLAGS) $(DEFINE) -c imap.c
+.c.o:
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(DEFINE) -c -o $@ $^
 
-imaptest.o: imaptest.c
-	$(CC) $(CFLAGS) $(DEFINE) -c imaptest.c
-
-helpers.o: helpers.c
-	$(CC) $(CFLAGS) $(DEFINE) -c helpers.c
-
-maildir.o: maildir.c
-	$(CC) $(CFLAGS) $(DEFINE) -c maildir.c
-
-list.o: list.c
-	$(CC) $(CFLAGS) $(DEFINE) -c list.c
-
-cram.o: cram.c
-	$(CC) $(CFLAGS) $(DEFINE) -c cram.c
-
-dotlock.o: dotlock.c
-	$(CC) $(CFLAGS) $(DEFINE) -c dotlock.c
-
-config.o: config.c
-	$(CC) $(CFLAGS) $(DEFINE) -c config.c
-
-partial_clean:
-	rm -f main.o	
 clean:
-	rm -f *.o $(PROG) $(OBJ) 
+	$(RM) *.o $(PROG) $(OBJ)
+distclean:
+	$(MAKE) clean
+	$(RM) Makefile
