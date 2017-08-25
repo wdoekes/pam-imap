@@ -1,6 +1,6 @@
 Summary:   PAM Module to authenticate against an IMAP server
 Name:      pam-imap
-Version:   0.3.9
+Version:   0.3.10~dev
 Release:   1
 URL:       https://sourceforge.net/projects/pam-imap/
 Source:    https://github.com/wdoekes/pam-imap/releases/download/v%{version}/%{name}_%{version}.tar.gz

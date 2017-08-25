@@ -4,7 +4,7 @@ Changes made by Cal Heldenbrand unless otherwise noted.
 
 As of 0.3.9
 
--- Fixes by Walter Doekes to make it compile on Debian Stretch\
+-- Fixes by Walter Doekes to make it compile on Debian Stretch
 
 -- Cleanups by Walter Doekes for debian packaging
 

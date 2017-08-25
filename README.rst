@@ -2,7 +2,7 @@ pam-imap for 2017+
 ==================
 
 This is an updated version of pam_imap 0.3.8, taken from
-http://pam-imap.sourceforge.net/. See README.original for the original
+http://pam-imap.sourceforge.net/. See README.z_original for the original
 readme.
 
 These files were mostly updated last in 2003, 2004 and imap.c in 2009.
@@ -28,5 +28,6 @@ Building a Debian package with ``gbp``:
 .. code-block:: console
 
     $ git clean -xf
-    $ gbp buildpackage -us -uc -sa --git-debian-branch=master --git-upstream-tag='v%(version)s' --git-ignore-new
+    $ gbp buildpackage -us -uc -sa --git-debian-branch=master \
+        --git-upstream-tag='v%(version)s' --git-ignore-new
 
