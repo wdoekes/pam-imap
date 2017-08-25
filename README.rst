@@ -11,10 +11,10 @@ These edits might make it work in 2017 again.
 See also: https://github.com/MrDroid/pam_imap
 
 
-Compiling
----------
+Building manually
+-----------------
 
-Debian install prerequisites: libpam0g-dev libssl-dev libgdbm-dev
+*Build requirements:* libpam0g-dev libssl-dev libgdbm-dev
 
 .. code-block:: console
 
@@ -23,11 +23,15 @@ Debian install prerequisites: libpam0g-dev libssl-dev libgdbm-dev
     $ make
 
 
-Building a Debian package with ``gbp``:
+Building a Debian package using git-buildpackage
+------------------------------------------------
+
+See build requirements from `Building manually`_.
+
+*Utility requirements:* git-buildpackage debhelper dh-autoreconf
 
 .. code-block:: console
 
     $ git clean -xf
     $ gbp buildpackage -us -uc -sa --git-debian-branch=master \
         --git-upstream-tag='v%(version)s' --git-ignore-new
-
