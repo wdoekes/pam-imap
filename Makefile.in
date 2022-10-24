@@ -1,4 +1,4 @@
-INSTALL_DIR = $(shell test -d /lib/x86_64-linux-gnu/security && echo $(DESTDIR)/lib/x86_64-linux-gnu/security || echo echo $(DESTDIR)/lib/security)
+INSTALL_DIR = $(shell test -d /lib/x86_64-linux-gnu/security && echo $(DESTDIR)/lib/x86_64-linux-gnu/security || echo $(DESTDIR)/lib/security)
 CC=@CC@
 CFLAGS=@CFLAGS@ @CPPFLAGS@ -I. -I /usr/kerberos/include -I /usr/local/include -I isynclib
 #CFLAGS=@CFLAGS@ @CPPFLAGS@
