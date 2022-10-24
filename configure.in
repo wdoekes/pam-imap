@@ -18,11 +18,12 @@ AC_CHECK_LIB(crypt, crypt, [LIBS="$LIBS -lcrypt"])
 # FIXME: Replace `main' with a function in `-ldb':
 AC_CHECK_LIB(db, dbm_open, [AC_DEFINE(HAVE_LIBDB, 1, [Define if you have libdb])])
 AC_CHECK_LIB(gdbm, gdbm_open, [LIBS="$LIBS -lgdbm"
-	AC_DEFINE(HAVE_LIBGDBM, 1, [Define if you have libgdbm]) ])
+AC_DEFINE(HAVE_LIBGDBM, 1, [Define if you have libgdbm]) ])
 AC_CHECK_LIB(socket, socket)
-AC_CHECK_LIB(pam, pam_sm_authenticate, [LIBS="$LIBS -lpam"])
+AC_CHECK_LIB(pam, pam_get_item, [LIBS="$LIBS -lpam"])
+AC_CHECK_LIB(pam_misc, misc_conv, [LIBS="$LIBS -lpam_misc"])  # only used for check_user
 AC_CHECK_LIB(ssl, SSL_CTX_new, [LIBS="$LIBS -lssl"
-		AC_DEFINE(HAVE_LIBSSL, 1, [Define for OpenSSL]) ])
+AC_DEFINE(HAVE_LIBSSL, 1, [Define for OpenSSL]) ])  # ???
 
 #AC_CACHE_CHECK(for dbm_open, ac_cv_dbmopen,
 #        [ac_cv_dbmopen=no
@@ -57,13 +58,15 @@ if test "x$ob_cv_with_debug" == xyes; then
 	AC_DEFINE(DEBUG, 1, [Turn on Debugging Mode])
 	CFLAGS="$CFLAGS -g"
 else
-	echo "DEBUG Not defined"
+	echo " --with-debug is unset"
 fi
 
 # Checks for header files.
 AC_FUNC_ALLOCA
 AC_HEADER_STDC
 AC_CHECK_HEADERS([arpa/inet.h fcntl.h limits.h netdb.h netinet/in.h stdlib.h string.h sys/socket.h sys/time.h syslog.h unistd.h])
+AC_CHECK_HEADERS([openssl/ssl.h], [], [AC_MSG_ERROR([Please install libssl-dev])])
+AC_CHECK_HEADERS([security/pam_appl.h security/pam_modules.h security/pam_misc.h], [], [AC_MSG_ERROR([Please install libpam0g-dev])])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
